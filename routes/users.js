@@ -19,8 +19,15 @@ router.get('/join', (req, res, next) => {
   res.render('join.pug', values);
 });
 
-router.post('/save', (req, res, next) => {
-  res.redirect('/user');
+router.post('/save', async (req, res, next) => {
+  // 비구조화 할당(값을 바로 할당할 수 있음)
+  let { userid, userpw, username, createdAt = new Date(), grade = 1 } = req.body;
+  let sql = "INSERT INTO user SET userid=?, userpw=?, username=?, createdAt=?, grade=?";
+  let value = [userid, userpw, username, createdAt, grade];
+  // execute(): 연결, 쿼리, 연결끊기를 한번에 해줌
+  let result = await connect.execute(sql, value);
+  res.json(result);
+  // res.redirect('/user');
 });
 
 module.exports = router;

@@ -4,6 +4,7 @@ const connect = mysql.createPool({
     port: 3307,
     user: "node",
     password: "000000",
+    database: 'node',
     connectionLimit: 10,
     waitForConnections: true // 접속한계 넘어가면 기다렸다가 쓰게 함
 });
