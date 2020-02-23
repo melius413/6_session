@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var dotenv = require('dotenv').config();
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
@@ -10,6 +11,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+// var salt = 'mySalt!@#$';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,8 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-  secret: 'mySalt!@#$', // salt로써, 암호화 할때 사용
-  resave: false, // 존재하면 다시 저장여부 설정(세션이 자꾸 바뀌는 경우는 true)
+  secret: process.env.salt, // salt로써, 암호화 할때 사용
+  resave: true, // 존재하면 다시 저장여부 설정(세션이 자꾸 바뀌는 경우는 true)
   saveUninitialized: true, // 초기화 여부
   // https://www.npmjs.com/package/express-session
   // Compatible Session Stores, 저장할수 있는 매체 리스트
