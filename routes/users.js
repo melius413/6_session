@@ -60,7 +60,7 @@ router.post('/loginModule', async (req, res, next) => {
     res.send(`
     <script>
     alert("아이디와 패스워드를 확인하세요.");
-    location.href ="/";
+    location.href = '/';
     </script>
     `);
   }

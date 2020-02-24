@@ -5,7 +5,8 @@ var dotenv = require('dotenv').config();
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
-var sessionStore = require('session-file-store')(session);
+// var sessionStore = require('session-file-store')(session); // occur rename error
+var LokiStore = require('connect-loki')(session);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -30,7 +31,9 @@ app.use(session({
   saveUninitialized: true, // 초기화 여부
   // https://www.npmjs.com/package/express-session
   // Compatible Session Stores, 저장할수 있는 매체 리스트
-  store: new sessionStore(), // 세션 저장위치, 해당 설정값 없으면 메모리저장
+  // store: new sessionStore({}) // 세션 저장위치, 해당 설정값 없으면 메모리저장, 해당 모듈은 가끔 아래 오류를 발생시킴
+  // [Error: EPERM: operation not permitted, rename '***.json.4225269665' -> '***.json']
+  store: new LokiStore({})
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -45,6 +48,8 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
+  if (err) console.error('error rc:', err);
+
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
